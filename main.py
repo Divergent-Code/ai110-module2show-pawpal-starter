@@ -1,4 +1,5 @@
 # main.py
+from datetime import datetime
 from core import Owner, Pet, Task, Scheduler
 
 def main():
@@ -10,18 +11,23 @@ def main():
     me.add_pet(dog)
     me.add_pet(cat)
 
-    # 2. Add Tasks
+    # 2. Add Tasks (Testing the new frequency options)
     dog.add_task(Task("Morning Walk", "08:00", "Daily", "High"))
-    dog.add_task(Task("Evening Feed", "18:00", "Daily", "Medium"))
+    dog.add_task(Task("Flea Medicine", "10:00", "Once", "High", target_date="2026-03-31"))
     cat.add_task(Task("Litter Box Clean", "09:00", "Daily", "Low"))
 
     # 3. Use the Scheduler
     brain = Scheduler(me)
-    all_tasks = brain.get_all_tasks()
-    schedule = brain.sort_by_time(all_tasks)
+    
+    # NEW: Get exactly today's date
+    today = datetime.now()
+    
+    # NEW: Ask the brain to filter tasks just for today
+    daily_tasks = brain.get_schedule_for_date(today)
+    schedule = brain.sort_by_time(daily_tasks)
 
     # 4. Print formatted output
-    print(f"\n--- {me.name}'s PawPal+ Schedule ---")
+    print(f"\n--- {me.name}'s PawPal+ Schedule for {today.strftime('%Y-%m-%d')} ---")
     print("-" * 45)
     print(f"{'Time':<7} | {'Status':<6} | {'Priority':<8} | {'Task'}")
     print("-" * 45)
