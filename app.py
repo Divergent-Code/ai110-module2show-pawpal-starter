@@ -6,17 +6,54 @@ Remember that Streamlit executes top-to-bottom on *every* user interaction.
 Therefore, `st.session_state` is utilized to persist the central `Owner` object across reruns.
 """
 import streamlit as st
+import os
 from datetime import datetime
 from core import Owner, Pet, Task, Scheduler
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
 if "owner" not in st.session_state:
-    # Initialize the single source of truth in the session state 
-    # to prevent data loss when the UI rerenders.
-    st.session_state.owner = Owner(name="Jordan")
+    st.session_state.owner = None
+
+if st.session_state.owner is None:
+    st.title("🐾 Welcome to PawPal+")
+    st.markdown("Please load an existing profile or create a new one to get started.")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Create New Profile")
+        new_name = st.text_input("Your Name:")
+        if st.button("Create Profile"):
+            if new_name.strip():
+                st.session_state.owner = Owner(name=new_name.strip())
+                st.rerun()
+            else:
+                st.error("Please enter a name.")
+                
+    with col2:
+        st.subheader("Load Existing Profile")
+        load_name = st.text_input("Existing Profile Name:")
+        if st.button("Load Profile"):
+            if load_name.strip():
+                filename = f"{load_name.strip()}_pawpal_data.json"
+                if os.path.exists(filename):
+                    st.session_state.owner = Owner.load_from_json(filename)
+                    st.rerun()
+                else:
+                    st.error(f"Could not find {filename}.")
+            else:
+                st.error("Please enter a name.")
+                
+    st.stop()
 
 owner = st.session_state.owner
+
+# Sidebar logout logic
+with st.sidebar:
+    st.markdown(f"**Current Profile:** {owner.name}")
+    if st.button("Switch Profile"):
+        st.session_state.owner = None
+        st.rerun()
 
 st.title("🐾 PawPal+ Dashboard")
 st.markdown(f"**Welcome back, {owner.name}!** Let's organize your pet care today.")
@@ -168,6 +205,7 @@ if st.button("Generate Schedule", type="primary"):
             st.markdown(f"**{task.time}** {freq_tag} | {status} | {p_icon} **{task.priority}** | {task.description} *(for {pet_owner_name})*")
 
 st.divider()
-if st.button("Save Data to JSON"):
-    owner.save_to_json("pawpal_data.json")
-    st.success("Data saved successfully!")
+filename = f"{owner.name}_pawpal_data.json"
+if st.button(f"Save Data to {filename}"):
+    owner.save_to_json(filename)
+    st.success(f"Data saved successfully to {filename}!")

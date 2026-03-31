@@ -1,56 +1,50 @@
-# PawPal+ (Module 2 Project)
+# 🐾 PawPal+ Dashboard (Module 2 Project)
 
-You are building **PawPal+**, a Streamlit app that helps a pet owner plan care tasks for their pet.
+**PawPal+** is a professional-grade pet care coordinator built with Python and Streamlit. It helps busy pet owners organize daily itineraries, manage recurring medical tasks, and visualize their pet's schedule with intelligent priority-based sorting. By tracking daily and weekly tasks, constraints, and priorities, PawPal+ serves as a smart assistant to produce efficient daily pet care plans.
 
-## Scenario
+## 📸 Demo
 
-A busy pet owner needs help staying consistent with pet care. They want an assistant that can:
+<!-- markdownlint-disable MD033 -->
+<a href="screenshots/pawpal_demo.png" target="_blank">
+  <img src='screenshots/pawpal_demo.png' title='PawPal App Dashboard' width='700' alt='PawPal App Dashboard' class='center-block' />
+</a>
+<!-- markdownlint-enable MD033 -->
 
-- Track pet care tasks (walks, feeding, meds, enrichment, grooming, etc.)
-- Consider constraints (time available, priority, owner preferences)
-- Produce a daily plan and explain why it chose that plan
+## ✨ Key Features
 
-Your job is to design the system first (UML), then implement the logic in Python, then connect it to the Streamlit UI.
+- **Multi-Pet Management**: Easily add and track tasks for multiple pets under a single centralized user profile.
+- **Data Persistence**: Start a new profile or load an existing one. All pets, tasks, and constraints are securely serialized and saved locally (e.g., `[User]_pawpal_data.json`).
+- **Smart Scheduling**: Let the app intelligently build a schedule for you by sorting tasks by priority (`High -> Medium -> Low`) and chronological time.
+- **Auto-Recurring Tasks**: Using Python's `timedelta`, the `Scheduler` calculates the next date occurrence for Daily/Weekly tasks when marked complete.
+- **Conflict Detection**: Built-in algorithm (`O(n log n)`) to detect and warn you if two tasks share the exact same starting time.
+- **Dynamic Views**: Toggle between viewing tasks for a single specific day, or viewing the master list of all tasks.
 
-## What you will build
+## 🚀 Getting Started
 
-Your final app should:
+### Prerequisites
 
-- Let a user enter basic owner + pet info
-- Let a user add/edit tasks (duration + priority at minimum)
-- Generate a daily schedule/plan based on constraints and priorities
-- Display the plan clearly (and ideally explain the reasoning)
-- Include tests for the most important scheduling behaviors
-
-## Getting started
+Ensure you have Python 3.8+ installed.
 
 ### Setup
 
 ```bash
+# Create and activate a virtual environment
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install the required dependencies
 pip install -r requirements.txt
 ```
 
-### Suggested workflow
+### Running the App
 
-1. Read the scenario carefully and identify requirements and edge cases.
-2. Draft a UML diagram (classes, attributes, methods, relationships).
-3. Convert UML into Python class stubs (no logic yet).
-4. Implement scheduling logic in small increments.
-5. Add tests to verify key behaviors.
-6. Connect your logic to the Streamlit UI in `app.py`.
-7. Refine UML so it matches what you actually built.
+To launch the Streamlit dashboard, run the following command in your terminal:
 
-## Smarter Scheduling
+```bash
+python -m streamlit run app.py
+```
 
-I have fully implemented the algorithmic requirements for this project:
-
-- **Auto-Recurring Tasks**: Using Python's `timedelta`, the `Scheduler` can intelligently calculate the next date occurrence for Daily/Weekly tasks when marked complete.
-- **Conflict Detection**: An algorithm loops over the schedule and `O(n log n)` warns the user if two tasks share the exact same starting time.
-- **Advanced Sorting/Filtering**: Python's `sorted(key=lambda x: ...)` logic handles grouping tasks strictly by priority first (`High -> Medium -> Low`) and then by chronological time.
-
-## Testing PawPal+
+## 🧪 Testing
 
 You can run the full automated test suite using the following command:
 
