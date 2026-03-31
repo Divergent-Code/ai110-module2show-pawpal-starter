@@ -14,8 +14,20 @@ class Scheduler:
 
     def handle_recurrence(self, task: Task, today: datetime) -> Optional[Task]:
         """Calculates the next instance of a task based on frequency."""
-        # This aligns with the UML; actual logic depends on how you want to clone the task.
-        return task
+        if task.frequency not in ("Daily", "Weekly"):
+            return None
+            
+        days_to_add = 1 if task.frequency == "Daily" else 7
+        next_date = today + timedelta(days=days_to_add)
+        
+        return Task(
+            description=task.description,
+            time=task.time,
+            frequency=task.frequency,
+            priority=task.priority,
+            target_date=next_date.strftime("%Y-%m-%d"),
+            target_day=next_date.strftime("%A") if task.frequency == "Weekly" else task.target_day
+        )
 
     def complete_task(self, task: Task, pet) -> None:
         """
