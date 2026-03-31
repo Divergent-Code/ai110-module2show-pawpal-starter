@@ -1,5 +1,5 @@
 # main.py
-from pawpal_system import Owner, Pet, Task, Scheduler
+from core import Owner, Pet, Task, Scheduler
 
 def main():
     # 1. Setup Data
@@ -17,7 +17,8 @@ def main():
 
     # 3. Use the Scheduler
     brain = Scheduler(me)
-    schedule = brain.get_sorted_schedule()
+    all_tasks = brain.get_all_tasks()
+    schedule = brain.sort_by_time(all_tasks)
 
     # 4. Print formatted output
     print(f"\n--- {me.name}'s PawPal+ Schedule ---")
