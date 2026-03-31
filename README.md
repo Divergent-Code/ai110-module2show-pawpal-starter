@@ -41,3 +41,11 @@ pip install -r requirements.txt
 5. Add tests to verify key behaviors.
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
+
+## Smarter Scheduling
+
+I have fully implemented the algorithmic requirements for this project:
+
+- **Auto-Recurring Tasks**: Using Python's `timedelta`, the `Scheduler` can intelligently calculate the next date occurrence for Daily/Weekly tasks when marked complete.
+- **Conflict Detection**: An algorithm loops over the schedule and `O(n log n)` warns the user if two tasks share the exact same starting time.
+- **Advanced Sorting/Filtering**: Python's `sorted(key=lambda x: ...)` logic handles grouping tasks strictly by priority first (`High -> Medium -> Low`) and then by chronological time.

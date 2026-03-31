@@ -11,8 +11,9 @@ def main():
     me.add_pet(dog)
     me.add_pet(cat)
 
-    # 2. Add Tasks (Testing the new frequency options)
+    # 2. Add Tasks (Testing the new frequency options & Conflicts)
     dog.add_task(Task("Morning Walk", "08:00", "Daily", "High"))
+    dog.add_task(Task("Morning Meds", "08:00", "Once", "High", target_date="2026-03-31")) # INTENTIONAL CONFLICT!
     dog.add_task(Task("Flea Medicine", "10:00", "Once", "High", target_date="2026-03-31"))
     cat.add_task(Task("Litter Box Clean", "09:00", "Daily", "Low"))
 
@@ -25,6 +26,13 @@ def main():
     # NEW: Ask the brain to filter tasks just for today
     daily_tasks = brain.get_schedule_for_date(today)
     schedule = brain.sort_by_time(daily_tasks)
+    
+    # NEW: Detect and report conflicts
+    conflicts = brain.detect_conflicts(daily_tasks)
+    if conflicts:
+        print("\n⚠️ WARNING: Scheduling conflicts detected!")
+        for t1, t2 in conflicts:
+            print(f"  -> '{t1.description}' and '{t2.description}' are both scheduled at {t1.time}.")
 
     # 4. Print formatted output
     print(f"\n--- {me.name}'s PawPal+ Schedule for {today.strftime('%Y-%m-%d')} ---")
