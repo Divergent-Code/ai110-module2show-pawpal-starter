@@ -11,8 +11,10 @@ from typing import List
 from .pet import Pet
 from .task import Task
 
+
 class Owner:
     """The primary user who manages multiple pets."""
+    
     def __init__(self, name: str, pets: List[Pet] = None):
         self.name = name
         self.pets = pets if pets is not None else []
@@ -23,30 +25,24 @@ class Owner:
 
     def get_all_tasks(self) -> List[Task]:
         """Aggregates all tasks from all pets owned."""
-        all_tasks = []
-        for pet in self.pets:
-            all_tasks.extend(pet.tasks)
-        return all_tasks
+        return [task for pet in self.pets for task in pet.tasks]
 
     def save_to_json(self, filename: str) -> None:
         """Saves owner, pets, and tasks to a JSON file."""
-        data = {
-            "name": self.name,
-            "pets": [p.to_dict() for p in self.pets]
-        }
-        with open(filename, 'w') as f:
+        data = {"name": self.name, "pets": [p.to_dict() for p in self.pets]}
+        with open(filename, "w") as f:
             json.dump(data, f, indent=4)
 
     @classmethod
-    def load_from_json(cls, filename: str) -> 'Owner':
+    def load_from_json(cls, filename: str) -> "Owner":
         """
-        Safely attempts to deserialize data from a JSON file.
-        Throws no exceptions if missing; gracefully falls back to a default Owner object.
+        Deserializes data from a JSON file.
+        Returns a default Owner if the file does not exist.
         """
         if not os.path.exists(filename):
             return cls(name="Default Owner")
             
-        with open(filename, 'r') as f:
+        with open(filename, "r") as f:
             data = json.load(f)
         
         owner = cls(name=data.get("name", "Unknown"))

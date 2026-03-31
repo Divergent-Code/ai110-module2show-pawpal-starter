@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import List, Dict
 from .task import Task
 
+
 @dataclass
 class Pet:
     """Represents an individual pet and its associated tasks."""
@@ -17,7 +18,7 @@ class Pet:
     tasks: List[Task] = field(default_factory=list)
 
     def add_task(self, task: Task) -> None:
-        """Assigns a new task to this pet by appending it to the internal list."""
+        """Assigns a new task to this pet."""
         self.tasks.append(task)
 
     def to_dict(self) -> Dict:
@@ -29,7 +30,7 @@ class Pet:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict) -> 'Pet':
+    def from_dict(cls, data: Dict) -> "Pet":
         """Creates a Pet instance (and its Tasks) from a dictionary."""
-        tasks_list = [Task.from_dict(t) for t in data.get("tasks", [])]
-        return cls(name=data["name"], species=data["species"], tasks=tasks_list)
+        tasks = [Task.from_dict(t) for t in data.get("tasks", [])]
+        return cls(name=data["name"], species=data["species"], tasks=tasks)

@@ -1,6 +1,8 @@
 """
-This file allows us to easily import our classes from the core folder.
-Think of it as the index at the back of a book.
+Core module exports for easy importing.
+
+Example:
+    from core import Owner, Pet, Task, Scheduler
 """
 from .task import Task
 from .pet import Pet
