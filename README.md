@@ -53,13 +53,15 @@ I have fully implemented the algorithmic requirements for this project:
 ## Testing PawPal+
 
 You can run the full automated test suite using the following command:
+
 ```bash
 python -m pytest
 ```
 
 Our tests ensure rock-solid stability across 5 core behaviors:
+
 1. Basic Task Addition
-2. Status Completion Marking 
+2. Status Completion Marking
 3. Verification of exact Chronological Sorting
 4. Auto-generation logic for recurring Daily/Weekly tasks using `timedelta`
 5. Proper conflict detection tagging for identical time-slots
