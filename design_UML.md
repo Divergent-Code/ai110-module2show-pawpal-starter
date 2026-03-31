@@ -2,7 +2,6 @@
 
 ## Class Diagram
 
-```mermaid
 classDiagram
     class Task {
         +str description
@@ -13,46 +12,44 @@ classDiagram
         +mark_complete()
         +next_occurrence(today: datetime) datetime
         +to_dict() dict
-        +from_dict(data: dict) Task$
+        +from_dict(data: dict) Task
     }
 
     class Pet {
         +str name
         +str species
-        +List~Task~ tasks
+        +List[Task] tasks
         +add_task(task: Task)
         +to_dict() dict
-        +from_dict(data: dict) Pet$
+        +from_dict(data: dict) Pet
     }
 
     class Owner {
         +str name
-        +List~Pet~ pets
+        +List[Pet] pets
         +add_pet(pet: Pet)
-        +get_all_tasks() List~Task~
+        +get_all_tasks() List[Task]
         +save_to_json(filename: str)
-        +load_from_json(filename: str) Owner$
+        +load_from_json(filename: str) Owner
     }
 
     class Scheduler {
         -Owner owner
         +__init__(owner: Owner)
-        +get_all_tasks() List~Task~
-        +sort_by_time(tasks: List~Task~) List~Task~
-        +sort_by_priority_then_time(tasks: List~Task~) List~Task~
-        +detect_conflicts(tasks: List~Task~) List~Tuple[Task,Task]~
-        +next_available_slot(tasks: List~Task~, duration_minutes: int) Optional[str]
-        +handle_recurrence(task: Task, today: datetime) Optional~Task~
+        +get_all_tasks() List[Task]
+        +sort_by_time(tasks: List[Task]) List[Task]
+        +sort_by_priority_then_time(tasks: List[Task]) List[Task]
+        +detect_conflicts(tasks: List[Task]) List[Tuple]
+        +next_available_slot(tasks: List[Task], duration_minutes: int) Optional[str]
+        +handle_recurrence(task: Task, today: datetime) Optional[Task]
     }
 
     Owner "1" --> "*" Pet : contains
     Pet "1" --> "*" Task : contains
     Scheduler --> Owner : uses
-```
 
 ## Sequence Diagram
 
-```mermaid
 sequenceDiagram
 
     participant User
@@ -104,4 +101,3 @@ sequenceDiagram
 
     User->>App: Close App
     App->>App: Save all data to JSON
-```
