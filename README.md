@@ -49,3 +49,19 @@ I have fully implemented the algorithmic requirements for this project:
 - **Auto-Recurring Tasks**: Using Python's `timedelta`, the `Scheduler` can intelligently calculate the next date occurrence for Daily/Weekly tasks when marked complete.
 - **Conflict Detection**: An algorithm loops over the schedule and `O(n log n)` warns the user if two tasks share the exact same starting time.
 - **Advanced Sorting/Filtering**: Python's `sorted(key=lambda x: ...)` logic handles grouping tasks strictly by priority first (`High -> Medium -> Low`) and then by chronological time.
+
+## Testing PawPal+
+
+You can run the full automated test suite using the following command:
+```bash
+python -m pytest
+```
+
+Our tests ensure rock-solid stability across 5 core behaviors:
+1. Basic Task Addition
+2. Status Completion Marking 
+3. Verification of exact Chronological Sorting
+4. Auto-generation logic for recurring Daily/Weekly tasks using `timedelta`
+5. Proper conflict detection tagging for identical time-slots
+
+**Confidence Level**: 🌟🌟🌟🌟🌟 (5/5 Stars! 100% of our algorithms have formal, passing assertions!)
