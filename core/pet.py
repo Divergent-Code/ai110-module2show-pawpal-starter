@@ -1,3 +1,10 @@
+"""
+core/pet.py
+
+Defines the entity-level `Pet` class which acts as a container for tasks.
+Architecturally, this forms a 1-to-many composition relationship between 
+a single Pet and its `List[Task]`.
+"""
 from dataclasses import dataclass, field
 from typing import List, Dict
 from .task import Task
@@ -10,7 +17,7 @@ class Pet:
     tasks: List[Task] = field(default_factory=list)
 
     def add_task(self, task: Task) -> None:
-        """Assigns a new task to this pet."""
+        """Assigns a new task to this pet by appending it to the internal list."""
         self.tasks.append(task)
 
     def to_dict(self) -> Dict:

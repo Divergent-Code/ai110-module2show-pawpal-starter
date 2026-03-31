@@ -1,4 +1,10 @@
-# main.py
+"""
+main.py
+
+This script serves as the Command Line Interface (CLI) entry point for the PawPal+ system.
+It demonstrates the programmatic instantiation of the Owner/Pet/Task hierarchy 
+and executes a test run of the Scheduler's conflict detection algorithms.
+"""
 from datetime import datetime
 from core import Owner, Pet, Task, Scheduler
 

@@ -1,3 +1,10 @@
+"""
+app.py
+
+This script serves as the primary reactive UI for the application using Streamlit.
+Remember that Streamlit executes top-to-bottom on *every* user interaction. 
+Therefore, `st.session_state` is utilized to persist the central `Owner` object across reruns.
+"""
 import streamlit as st
 from datetime import datetime
 from core import Owner, Pet, Task, Scheduler
@@ -5,6 +12,8 @@ from core import Owner, Pet, Task, Scheduler
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
 if "owner" not in st.session_state:
+    # Initialize the single source of truth in the session state 
+    # to prevent data loss when the UI rerenders.
     st.session_state.owner = Owner(name="Jordan")
 
 owner = st.session_state.owner

@@ -1,3 +1,10 @@
+"""
+tests/test_pawpal.py
+
+Automated test suite verifying the business logic of the PawPal+ system.
+These tests strictly adhere to the Arrange-Act-Assert (AAA) pattern to guarantee
+the core algorithms (Sorting, Recurrence, Conflict Detection) remain stable over time.
+"""
 import pytest
 from datetime import datetime, timedelta
 from core import Owner, Pet, Task, Scheduler

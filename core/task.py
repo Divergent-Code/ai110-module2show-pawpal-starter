@@ -1,3 +1,10 @@
+"""
+core/task.py
+
+This module defines the foundational Data Model for the PawPal+ system.
+It utilizes Python's `dataclass` to provide automatic `__init__`, `__repr__`, 
+and equality methods with minimal boilerplate safely supporting serialization.
+"""
 from dataclasses import dataclass, asdict
 from datetime import datetime, timedelta
 from typing import Dict, Optional
@@ -19,7 +26,10 @@ class Task:
         self.completed = True
 
     def to_dict(self) -> Dict:
-        """Converts task data to a dictionary for saving."""
+        """
+        Serializes the Task data to a native Python dictionary.
+        This provides compatibility with json.dump for persistent saving.
+        """
         return asdict(self)
 
     @classmethod

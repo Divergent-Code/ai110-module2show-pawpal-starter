@@ -1,3 +1,10 @@
+"""
+core/owner.py
+
+Represents the top-level aggregator in the PawPal system.
+The `Owner` manages the 1-to-many relationship with `Pet` instances, 
+and serves as the entry point for JSON serialization/deserialization.
+"""
 import json
 import os
 from typing import List
@@ -32,7 +39,10 @@ class Owner:
 
     @classmethod
     def load_from_json(cls, filename: str) -> 'Owner':
-        """Loads data from a JSON file and reconstructs objects."""
+        """
+        Safely attempts to deserialize data from a JSON file.
+        Throws no exceptions if missing; gracefully falls back to a default Owner object.
+        """
         if not os.path.exists(filename):
             return cls(name="Default Owner")
             

@@ -1,3 +1,10 @@
+"""
+core/scheduler.py
+
+Serves as the algorithmic engine of PawPal+. Encapsulates all scheduling, sorting, 
+and conflict detection logic necessary to parse `Task` lists. Designed for 
+performance, leveraging built-in optimizations like TimSort for `O(N log N)` efficiency.
+"""
 from typing import List, Tuple, Optional
 from datetime import datetime, timedelta
 from .owner import Owner
@@ -78,7 +85,10 @@ class Scheduler:
         return filtered_tasks
 
     def sort_by_time(self, tasks: List[Task]) -> List[Task]:
-        """Sorts tasks strictly chronologically by time (Used for Single Day view)."""
+        """
+        Sorts tasks strictly chronologically by time (Used for Single Day view).
+        Time Complexity: O(N log N) due to Python's native TimSort implementation on lists.
+        """
         return sorted(tasks, key=lambda x: x.time)
 
     def sort_by_priority_then_time(self, tasks: List[Task]) -> List[Task]:
@@ -127,7 +137,10 @@ class Scheduler:
         return sorted(tasks, key=sort_key)
 
     def detect_conflicts(self, tasks: List[Task]) -> List[Tuple[Task, Task]]:
-        """Finds tasks scheduled for the exact same time."""
+        """
+        Finds tasks scheduled for the exact same time.
+        Time Complexity: O(N log N) overall, as the O(N) sweep relies on the initial O(N log N) sort.
+        """
         conflicts = []
         sorted_tasks = self.sort_by_time(tasks)
         for i in range(len(sorted_tasks) - 1):
