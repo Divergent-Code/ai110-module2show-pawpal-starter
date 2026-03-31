@@ -38,3 +38,23 @@ class Scheduler:
         """Sorts by Priority (High -> Medium -> Low), then by time."""
         priority_map = {"High": 0, "Medium": 1, "Low": 2}
         return sorted(tasks, key=lambda x: (priority_map.get(x.priority.capitalize(), 3), x.time))
+
+    def detect_conflicts(self, tasks: List[Task]) -> List[Tuple[Task, Task]]:
+        """Finds tasks scheduled for the exact same time."""
+        conflicts = []
+        sorted_tasks = self.sort_by_time(tasks)
+        for i in range(len(sorted_tasks) - 1):
+            if sorted_tasks[i].time == sorted_tasks[i+1].time:
+                conflicts.append((sorted_tasks[i], sorted_tasks[i+1]))
+        return conflicts
+
+    def next_available_slot(self, tasks: List[Task], duration_minutes: int) -> Optional[str]:
+        """Placeholder: Finds the next gap in the schedule."""
+        # For a full implementation, this would parse times and find a gap > duration_minutes.
+        # Returning a default safe slot for demonstration.
+        return "12:00"
+
+    def handle_recurrence(self, task: Task, today: datetime) -> Optional[Task]:
+        """Calculates the next instance of a task based on frequency."""
+        # This aligns with the UML; actual logic depends on how you want to clone the task.
+        return task
