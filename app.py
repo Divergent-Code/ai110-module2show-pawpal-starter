@@ -135,9 +135,19 @@ if st.button("Generate Schedule", type="primary"):
                     pet_owner_name = p.name
                     break
             
+            # 1. Status Emoji
             status = "✅" if task.completed else "⏳"
             
-            # Build a clear tag so we know exactly when this task happens
+            # 2. Priority Traffic Light (NEW!)
+            priority_icons = {
+                "High":   "🔴",
+                "Medium": "🟡",
+                "Low":    "🟢"
+            }
+            # Grab the matching icon, default to a white circle if missing
+            p_icon = priority_icons.get(task.priority, "⚪") 
+            
+            # 3. Build a clear tag for the frequency
             if task.frequency == "Daily":
                 freq_tag = "[Daily]"
             elif task.frequency == "Weekly":
@@ -145,7 +155,8 @@ if st.button("Generate Schedule", type="primary"):
             else:
                 freq_tag = f"[Once: {task.target_date}]"
             
-            st.markdown(f"**{task.time}** {freq_tag} | {status} | **{task.priority} Priority** | {task.description} *(for {pet_owner_name})*")
+            # 4. Print it all cleanly to the screen!
+            st.markdown(f"**{task.time}** {freq_tag} | {status} | {p_icon} **{task.priority}** | {task.description} *(for {pet_owner_name})*")
 
 st.divider()
 if st.button("Save Data to JSON"):
