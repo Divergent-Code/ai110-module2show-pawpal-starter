@@ -1,4 +1,3 @@
-# app.py
 import streamlit as st
 from datetime import datetime
 from core import Owner, Pet, Task, Scheduler
@@ -51,7 +50,6 @@ else:
         task_priority = st.selectbox("Priority", ["Low", "Medium", "High"], index=1)
         task_freq = st.selectbox("Frequency", ["Daily", "Weekly", "Once"])
         
-        # NEW: Dynamic inputs based on frequency
         target_day = None
         target_date = None
         
@@ -85,28 +83,52 @@ st.divider()
 # --- Section 3: The Scheduler Engine ---
 st.subheader("3. Schedule Viewer")
 
-# NEW: Let the user pick which day they want to look at
-view_date = st.date_input("Select a day to view its schedule", value=datetime.today())
-sort_method = st.radio("Sorting Method:", ["Chronological (By Time)", "Smart (Priority, then Time)"], horizontal=True)
+# NEW: Toggle between viewing a single day or the master list
+view_mode = st.radio("Select View Mode:", ["Single Day", "All Available Tasks (Master List)"], horizontal=True)
+
+if view_mode == "Single Day":
+    view_date = st.date_input("Select a day to view", value=datetime.today())
+    sort_method = st.radio("Sorting Method:", ["Chronological (By Time)", "Smart (Priority, then Time)"], horizontal=True)
+else:
+    # If they select Master List, show different sorting options
+    sort_method = st.radio("Sorting Method:", ["By Date & Frequency", "By Priority"], horizontal=True)
 
 if st.button("Generate Schedule", type="primary"):
     brain = Scheduler(owner)
     
-    # NEW: Convert Streamlit's date to a datetime object so our Brain can read it
-    target_datetime = datetime.combine(view_date, datetime.min.time())
-    daily_tasks = brain.get_schedule_for_date(target_datetime)
-    
-    if not daily_tasks:
-        st.info("No tasks scheduled for this day. You're all caught up!")
-    else:
-        if "Smart" in sort_method:
-            scheduled_tasks = brain.sort_by_priority_then_time(daily_tasks)
+    # Logic for SINGLE DAY View
+    if view_mode == "Single Day":
+        target_datetime = datetime.combine(view_date, datetime.min.time())
+        tasks_to_display = brain.get_schedule_for_date(target_datetime)
+        
+        if not tasks_to_display:
+            st.info("No tasks scheduled for this day!")
         else:
-            scheduled_tasks = brain.sort_by_time(daily_tasks)
+            if "Smart" in sort_method:
+                scheduled_tasks = brain.sort_by_priority_then_time(tasks_to_display)
+            else:
+                scheduled_tasks = brain.sort_by_time(tasks_to_display)
+            
+            st.markdown(f"### 📋 Itinerary for {view_date.strftime('%A, %b %d, %Y')}")
 
-        # NEW: Display the specific date chosen
-        st.markdown(f"### 📋 Itinerary for {view_date.strftime('%A, %b %d, %Y')}")
+    # Logic for MASTER LIST View
+    else:
+        tasks_to_display = brain.get_all_tasks()
+        
+        if not tasks_to_display:
+            st.info("No tasks have been created yet!")
+        else:
+            if "Priority" in sort_method:
+                scheduled_tasks = brain.sort_master_list_by_priority(tasks_to_display)
+            else:
+                scheduled_tasks = brain.sort_master_list_by_date(tasks_to_display)
+                
+            st.markdown("### 📚 Master List of All Tasks")
+
+    # Display the tasks (Works for both views!)
+    if tasks_to_display:
         for task in scheduled_tasks:
+            # Figure out which pet this belongs to
             pet_owner_name = "Unknown Pet"
             for p in owner.pets:
                 if task in p.tasks:
@@ -114,7 +136,14 @@ if st.button("Generate Schedule", type="primary"):
                     break
             
             status = "✅" if task.completed else "⏳"
-            freq_tag = f"[{task.frequency}]"
+            
+            # Build a clear tag so we know exactly when this task happens
+            if task.frequency == "Daily":
+                freq_tag = "[Daily]"
+            elif task.frequency == "Weekly":
+                freq_tag = f"[Weekly: {task.target_day}]"
+            else:
+                freq_tag = f"[Once: {task.target_date}]"
             
             st.markdown(f"**{task.time}** {freq_tag} | {status} | **{task.priority} Priority** | {task.description} *(for {pet_owner_name})*")
 
