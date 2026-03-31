@@ -17,8 +17,8 @@ class Task:
         self.completed = True
 
     def to_dict(self) -> Dict:
-        """Converts task data to a dictionary."""
-        return self.__dict__
+        """Converts task data to a dictionary (returns a safe copy)."""
+        return dict(self.__dict__)
 
     @staticmethod
     def from_dict(data: Dict) -> 'Task':
@@ -44,6 +44,12 @@ class Pet:
             "tasks": [t.to_dict() for t in self.tasks]
         }
 
+    @staticmethod
+    def from_dict(data: Dict) -> 'Pet':
+        """Creates a Pet instance (and its Tasks) from a dictionary."""
+        tasks = [Task.from_dict(t) for t in data.get("tasks", [])]
+        return Pet(name=data["name"], species=data["species"], tasks=tasks)
+
 @dataclass
 class Owner:
     """The primary user who manages multiple pets."""
@@ -56,10 +62,20 @@ class Owner:
 
     def get_all_tasks(self) -> List[Task]:
         """Aggregates all tasks from all pets owned."""
-        all_tasks = []
-        for pet in self.pets:
-            all_tasks.extend(pet.tasks)
-        return all_tasks
+        return [task for pet in self.pets for task in pet.tasks]
+
+    def to_dict(self) -> Dict:
+        """Converts owner data and all nested pets/tasks to a dictionary."""
+        return {
+            "name": self.name,
+            "pets": [p.to_dict() for p in self.pets]
+        }
+
+    @staticmethod
+    def from_dict(data: Dict) -> 'Owner':
+        """Creates an Owner instance (and all nested Pets/Tasks) from a dictionary."""
+        pets = [Pet.from_dict(p) for p in data.get("pets", [])]
+        return Owner(name=data["name"], pets=pets)
 
 class Scheduler:
     """The 'Brain' that organizes and manages tasks across pets."""
