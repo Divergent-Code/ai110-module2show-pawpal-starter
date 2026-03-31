@@ -1,32 +1,29 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple, Dict
 from datetime import datetime
+import json
 
 @dataclass
 class Task:
     """Represents a specific care activity for a pet."""
     description: str
-    time: str
+    time: str  # Format: "HH:MM"
     frequency: str
     priority: str
     completed: bool = False
 
     def mark_complete(self) -> None:
         """Sets the task status to completed."""
-        pass
-
-    def next_occurrence(self, today: datetime) -> datetime:
-        """Calculates the next date/time this task should occur."""
-        pass
+        self.completed = True
 
     def to_dict(self) -> Dict:
-        """Converts task data to a dictionary for JSON storage."""
-        pass
+        """Converts task data to a dictionary."""
+        return self.__dict__
 
     @staticmethod
     def from_dict(data: Dict) -> 'Task':
         """Creates a Task instance from a dictionary."""
-        pass
+        return Task(**data)
 
 @dataclass
 class Pet:
@@ -37,16 +34,15 @@ class Pet:
 
     def add_task(self, task: Task) -> None:
         """Assigns a new task to this pet."""
-        pass
+        self.tasks.append(task)
 
     def to_dict(self) -> Dict:
-        """Converts pet data to a dictionary."""
-        pass
-
-    @staticmethod
-    def from_dict(data: Dict) -> 'Pet':
-        """Creates a Pet instance from a dictionary."""
-        pass
+        """Converts pet data and nested tasks to a dictionary."""
+        return {
+            "name": self.name,
+            "species": self.species,
+            "tasks": [t.to_dict() for t in self.tasks]
+        }
 
 @dataclass
 class Owner:
@@ -56,46 +52,22 @@ class Owner:
 
     def add_pet(self, pet: Pet) -> None:
         """Adds a new pet to the owner's profile."""
-        pass
+        self.pets.append(pet)
 
     def get_all_tasks(self) -> List[Task]:
         """Aggregates all tasks from all pets owned."""
-        pass
-
-    def save_to_json(self, filename: str) -> None:
-        """Serializes the entire owner object tree to a JSON file."""
-        pass
-
-    @classmethod
-    def load_from_json(cls, filename: str) -> 'Owner':
-        """Loads owner and pet data from a JSON file."""
-        pass
+        all_tasks = []
+        for pet in self.pets:
+            all_tasks.extend(pet.tasks)
+        return all_tasks
 
 class Scheduler:
-    """Logic-heavy class for managing time and task conflicts."""
+    """The 'Brain' that organizes and manages tasks across pets."""
     def __init__(self, owner: Owner):
         self.owner = owner
 
-    def get_all_tasks(self) -> List[Task]:
-        """Retrieves tasks via the Owner object."""
-        pass
-
-    def sort_by_time(self, tasks: List[Task]) -> List[Task]:
-        """Returns tasks ordered by their scheduled time."""
-        pass
-
-    def sort_by_priority_then_time(self, tasks: List[Task]) -> List[Task]:
-        """Returns tasks ordered by priority, then chronologically."""
-        pass
-
-    def detect_conflicts(self, tasks: List[Task]) -> List[Tuple]:
-        """Identifies overlapping tasks in the schedule."""
-        pass
-
-    def next_available_slot(self, tasks: List[Task], duration_minutes: int) -> Optional[str]:
-        """Finds a free gap in the schedule for a new task."""
-        pass
-
-    def handle_recurrence(self, task: Task, today: datetime) -> Optional[Task]:
-        """Generates the next task instance if it is recurring."""
-        pass
+    def get_sorted_schedule(self) -> List[Task]:
+        """Returns all tasks sorted by time."""
+        tasks = self.owner.get_all_tasks()
+        # Simple string-based time sorting (assumes 24h format "HH:MM")
+        return sorted(tasks, key=lambda x: x.time)
